@@ -9,6 +9,7 @@ class TaskTableSeeder extends Seeder {
         DB::table('tasks')->delete();
 
         $user_id = DB::table('users')->where('username', '=', 'demo1')->first()->id;
+        $user2_id = DB::table('users')->where('username', '=', 'demo2')->first()->id;
  
         Task::create(array(
             'user_id' => $user_id,
@@ -21,6 +22,11 @@ class TaskTableSeeder extends Seeder {
         Task::create(array(
             'user_id' => $user_id,
             'title' => 'Test task 2',
+        ));
+
+        Task::create(array(
+            'user_id' => $user2_id,
+            'title' => 'Demo2 user task',
         ));
  
     }

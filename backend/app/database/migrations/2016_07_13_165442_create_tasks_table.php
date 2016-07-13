@@ -16,7 +16,7 @@ class CreateTasksTable extends Migration {
 		{
             $table->increments('id');
             $table->integer('user_id');
-            $table->string('title');
+            $table->string('title')->nullable();
             $table->bigInteger('duration')->nullable();
             $table->enum('state', array('running', 'completed', 'paused'))->default('running');
             $table->timestamp('completed_at')->nullable();

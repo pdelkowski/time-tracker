@@ -63,13 +63,23 @@ class TaskController extends \BaseController {
 	 */
 	public function show($id)
 	{
-        $user = Auth::user()->id;
+        $user_id = Auth::user()->id;
 
         try {
-            $task = Task::findOrFail($id);
+            $task = Task::findOrFailPermissions($id, $user_id);
+        }
+        catch( UserPermissionException $e )
+        {
+
+            return Response::json(array(
+                'error' => true,
+                'task' => array('msg' => $e->getMessage())),
+                400
+            );
         }
         catch( Illuminate\Database\Eloquent\ModelNotFoundException $e )
         {
+
             return Response::json(array(
                 'error' => true,
                 'task' => array('msg' => 'Task not found')),
@@ -77,15 +87,6 @@ class TaskController extends \BaseController {
             );
         }
         
-        if( !$task->isUserOwner($user) )
-        {
-            return Response::json(array(
-                'error' => true,
-                'task' => $task->toArray()),
-                400
-            );
-        }
-
         return Response::json(array(
             'error' => false,
             'task' => $task->toArray()),
@@ -103,7 +104,63 @@ class TaskController extends \BaseController {
 	 */
 	public function update($id)
 	{
-		
+        $user = Auth::user();
+        $state = Request::get('state');
+        $title = Request::get('title');
+
+        try {
+            $task = Task::findOrFailPermissions($id, $user->id);
+
+            switch($state)
+            {
+                case 'pause':
+                    $task->pauseTask($title);
+                    break;
+
+                case 'stop':
+                    $task->stopTask($title);
+                    break;
+
+                default:
+                    return Response::json(array(
+                        'error' => true,
+                        'task' => array('msg' => 'Unknown state')),
+                        400
+                    );
+                    break;
+            }
+
+        }
+        catch( UserPermissionException $e )
+        {
+            return Response::json(array(
+                'error' => true,
+                'task' => array('msg' => $e->getMessage())),
+                400
+            );
+        }
+        catch( TaskStateException $e )
+        {
+            return Response::json(array(
+                'error' => true,
+                'task' => array('msg' => $e->getMessage())),
+                400
+            );
+        }
+        catch( Illuminate\Database\Eloquent\ModelNotFoundException $e )
+        {
+            return Response::json(array(
+                'error' => true,
+                'task' => array('msg' => 'Task not found')),
+                400
+            );
+        }
+        
+        return Response::json(array(
+            'error' => false,
+            'task' => $task->toArray()),
+            200
+        );
 	}
 
 
@@ -115,8 +172,9 @@ class TaskController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-		//
+        return Response::json(array(),
+            405
+        );
 	}
-
 
 }
