@@ -1,0 +1,2 @@
+# Install sqlite driver
+sudo apt-get install -y php5-sqlite
