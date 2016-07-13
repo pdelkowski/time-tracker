@@ -86,7 +86,7 @@ class Task extends Eloquent {
     protected function _calculateDuration()
     {
         if( $this->completed_at == null )
-            throw new \Exception("Cannot calcuate time different because completed_at is not set");
+            throw new \Exception("Cannot calcuate time difference because completed_at is not set");
 
         $diff = $this->created_at->diffInMinutes($this->completed_at);
         return $diff;

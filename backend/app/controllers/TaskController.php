@@ -29,6 +29,14 @@ class TaskController extends \BaseController {
 	{
         $user = Auth::user();
 
+        $validator = $this->_getValidator(Input::all());
+        if( $validator->fails() )
+            return Response::json(array(
+                'error' => true,
+                'msg' => $validator->messages()),
+                400
+            );
+
         if( $user->hasRunningTask() )
         {
             return Response::json(array(
@@ -38,19 +46,18 @@ class TaskController extends \BaseController {
             );
         }   
 
+        $title = Input::get('title');
+
         $task = new Task;
         $task->user_id = $user->id;
-        $task->title = Request::get('title');
-     
-        // Validation and Filtering is sorely needed!!
-        // Seriously, I'm a bad person for leaving that out.
+        $task->title = $title;
      
         $task->save();
      
         return Response::json(array(
             'error' => false,
             'task' => $task->toArray()),
-            200
+            201
         );
 	}
 
@@ -73,7 +80,7 @@ class TaskController extends \BaseController {
 
             return Response::json(array(
                 'error' => true,
-                'task' => array('msg' => $e->getMessage())),
+                'msg' => $e->getMessage()),
                 400
             );
         }
@@ -82,7 +89,7 @@ class TaskController extends \BaseController {
 
             return Response::json(array(
                 'error' => true,
-                'task' => array('msg' => 'Task not found')),
+                'msg' => 'Task not found'),
                 400
             );
         }
@@ -105,8 +112,17 @@ class TaskController extends \BaseController {
 	public function update($id)
 	{
         $user = Auth::user();
-        $state = Request::get('state');
-        $title = Request::get('title');
+
+        $validator = $this->_getValidator(Input::all());
+        if( $validator->fails() )
+            return Response::json(array(
+                'error' => true,
+                'msg' => $validator->messages()),
+                400
+            );
+
+        $state = Input::get('state');
+        $title = Input::get('title');
 
         try {
             $task = Task::findOrFailPermissions($id, $user->id);
@@ -124,7 +140,7 @@ class TaskController extends \BaseController {
                 default:
                     return Response::json(array(
                         'error' => true,
-                        'task' => array('msg' => 'Unknown state')),
+                        'msg' => 'Unknown state'),
                         400
                     );
                     break;
@@ -135,7 +151,7 @@ class TaskController extends \BaseController {
         {
             return Response::json(array(
                 'error' => true,
-                'task' => array('msg' => $e->getMessage())),
+                'msg' => $e->getMessage()),
                 400
             );
         }
@@ -143,7 +159,7 @@ class TaskController extends \BaseController {
         {
             return Response::json(array(
                 'error' => true,
-                'task' => array('msg' => $e->getMessage())),
+                'msg' => $e->getMessage()),
                 400
             );
         }
@@ -151,7 +167,7 @@ class TaskController extends \BaseController {
         {
             return Response::json(array(
                 'error' => true,
-                'task' => array('msg' => 'Task not found')),
+                'msg' => 'Task not found'),
                 400
             );
         }
@@ -172,9 +188,45 @@ class TaskController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-        return Response::json(array(),
-            405
-        );
+        App::abort(405);
 	}
+
+
+	/**
+	 * Get input validator for a view
+	 *
+	 * @param  array   $input
+	 * @return Illuminate\Validation\Validator
+	 */
+    public function _getValidator($input)
+    {
+        // Get the function name, of function that called this function
+        $trace=debug_backtrace(); 
+        $view = $trace[1]["function"];
+
+        switch($view)
+        {
+            case 'store':
+                $validator = Validator::make($input,
+                    array(
+                        'title' => 'max:255',
+                    )
+                ); 
+                break;
+
+            case 'update':
+                $validator = Validator::make($input,
+                    array(
+                        'state' => 'required|in:pause,stop',
+                        'name' => 'max:255',
+                    )
+                ); 
+                break;
+
+            default:
+                $validator = null;
+        }
+        return $validator;
+    }
 
 }
