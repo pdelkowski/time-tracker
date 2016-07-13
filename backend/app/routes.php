@@ -24,4 +24,5 @@ Route::get('/authtest', array('before' => 'auth.basic', function()
 Route::group(array('prefix' => 'api/v1', 'before' => 'auth.basic'), function()
 {
     Route::resource('task', 'TaskController');
+    Route::resource('auth', 'AuthController');
 });
