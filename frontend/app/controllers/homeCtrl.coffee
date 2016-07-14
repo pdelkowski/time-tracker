@@ -118,7 +118,6 @@ app.controller 'homeCtrl', (['$log', '$window', '$scope', '$location', '$interva
             $scope.pauseButton = true
             $scope.stopButton = true
 
-            console.log 'aa: ' + timerSeconds
             timerSeconds = timerSeconds-$scope.running.paused_duration_sec
 
             startTimer()

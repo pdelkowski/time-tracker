@@ -120,7 +120,6 @@
         if ($scope.running.state === 'running') {
           $scope.pauseButton = true;
           $scope.stopButton = true;
-          console.log('aa: ' + timerSeconds);
           timerSeconds = timerSeconds - $scope.running.paused_duration_sec;
           startTimer();
         } else {
