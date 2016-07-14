@@ -39,10 +39,21 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
      *
      * @return array
      */
-    public function getTasks()
+    public function getCompletedTasks()
     {
-        $tasks = Task::where('user_id', '=', $this->id)->get();
+        $tasks = Task::where('user_id', '=', $this->id)->where('state', '=', 'completed')->orderby('created_at', 'DESC')->get();
         return $tasks;
+    }
+
+    /**
+     * Return running task
+     *
+     * @return Task
+     */
+    public function getRunningTask()
+    {
+        $task = Task::where('user_id', '=', $this->id)->where('state', '!=', 'completed')->first();
+        return $task;
     }
 
 }

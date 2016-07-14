@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="timeTracker">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>TimeTracker</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <style>
+    body {
+        padding-top: 70px;
+        /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    }
+    </style>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <div ui-view="header"></div>
+
+    <div ui-view="content@root"></div>
+
+
+    <footer class="footer" style="position: fixed; bottom: 0; width: 100%; height: 40px; background-color: #333; text-align: right;">
+      <div class="container">
+        <p style="margin: 10px 0; color: #777;">TimeTracker by Piotr Delkowski</p>
+      </div>
+    </footer>
+
+    <!-- jQuery Version 1.11.1 -->
+    <script src="assets/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="assets/js/bootstrap.min.js"></script>
+
+    <!-- Angular -->
+    <script src="vendor/angular.js"></script>
+    <script src="vendor/angular-ui-router.min.js"></script>
+    <script src="vendor/oclazyload/ocLazyLoad.min.js"></script>
+
+    <script src="app/app.js"></script>
+    <script src="app/main.js"></script>
+    <script src="app/config.constant.js"></script>
+    <script src="app/config.custom.js"></script>
+    <script src="app/router.js"></script>
+
+    <script src="app/controllers/headerCtrl.js"></script>
+    <script src="app/controllers/homeCtrl.js"></script>
+    <script src="app/controllers/accountCtrl.js"></script>
+
+    <script src="app/services/userService.js"></script>
+    <script src="app/services/locationService.js"></script>
+    <script src="app/services/storageService.js"></script>
+    <script src="app/services/actionService.js"></script>
+    <script src="app/services/exceptionMapperService.js"></script>
+</body>
+
+</html>

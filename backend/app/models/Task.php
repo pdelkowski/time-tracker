@@ -76,6 +76,24 @@ class Task extends Eloquent {
         $this->save();
         return $this;
     }
+
+    /**
+     * Continue to run task, and save it
+     *
+     * @return Task
+     */
+    public function continueTask($title=null)
+    {
+        if( $title != null)
+            $this->title = $title;
+
+        if( $this->state != 'paused' )
+            throw new TaskStateException("You cannot continue task from current state");
+
+        $this->state = 'running';
+        $this->save();
+        return $this;
+    }
     
     /**
      * Calculate task duration, returns in minutes

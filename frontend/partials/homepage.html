@@ -1,0 +1,76 @@
+<!-- Page Content -->
+<div class="jumbotron">
+    <div class="container">
+        <div class="col-lg-12 text-center">
+            <h1 id="timeCounter">{{counter}}</h1>
+            <br>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div ng-repeat="alert in alerts" class="alert alert-danger" role="alert">{{alert}}</div>
+            </div>
+        </div>
+
+        <div class="col-lg-12">
+
+            <form>
+
+                <div class="col-md-12 col-sm-12">
+                    <label>Task title</label>
+                    <input type="text" ng-model="running.title" class="form-control input-lg" id="taskDesc" placeholder="What you're working on ?">
+                </div>
+                <!--<div class="col-md-2 col-sm-6">-->
+                    <!--<label>Project</label>-->
+                    <!--<select class="form-control input-lg">-->
+                        <!--<option>--------</option>-->
+                        <!--<option>Otto</option>-->
+                        <!--<option>Thornton</option>-->
+                        <!--<option>the Bird</option>-->
+                    <!--</select>-->
+                <!--</div>-->
+                <!--<div class="col-md-2 col-sm-6">-->
+                    <!--<label>Team</label>-->
+                    <!--<select class="form-control input-lg">-->
+                        <!--<option>--------</option>-->
+                        <!--<option>Alfa</option>-->
+                        <!--<option>Beta</option>-->
+                    <!--</select>-->
+                <!--</div>-->
+                <div class="col-md-12 col-sm-12 text-center">
+                    <br>
+                    <button type="submit" class="btn btn-lg btn-warning" ng-show="pauseButton" ng-model="pauseButton" data-ng-click="pauseCounter()"><span class="glyphicon glyphicon-pause" aria-hidden="true"></span> Pause</button>
+                    <button type="submit" class="btn btn-lg btn-danger" ng-show="stopButton" data-ng-click="stopCounter()"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span> Stop</button>
+                    <button type="submit" class="btn btn-lg btn-success" ng-show="startButton" data-ng-click="startCounter()"><span class="glyphicon glyphicon-play" aria-hidden="true"></span> Start</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="col-lg-12">
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Task title</th>
+                    <th>Started at</th>
+                    <th>Completed at</th>
+                    <th>Duration</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="task in tasks">
+                    <th scope="row">{{ task.id }}</th>
+                    <td>{{ task.title }}</td>
+                    <td>{{ task.created_at }}</td>
+                    <td>{{ task.completed_at }}</td>
+                    <td>{{ task.duration }}min</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>

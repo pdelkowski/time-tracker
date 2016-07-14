@@ -10,7 +10,7 @@ class TaskController extends \BaseController {
 	public function index()
 	{
         $user = Auth::user();
-        $tasks = $user->getTasks();
+        $tasks = $user->getCompletedTasks();
 
         return Response::json(array(
             'error' => false,
@@ -129,6 +129,10 @@ class TaskController extends \BaseController {
 
             switch($state)
             {
+                case 'continue':
+                    $task->continueTask($title);
+                    break;
+
                 case 'pause':
                     $task->pauseTask($title);
                     break;
@@ -168,7 +172,7 @@ class TaskController extends \BaseController {
             return Response::json(array(
                 'error' => true,
                 'msg' => 'Task not found'),
-                400
+                404
             );
         }
         
@@ -191,6 +195,32 @@ class TaskController extends \BaseController {
         App::abort(405);
 	}
 
+	/**
+	 * Show currently running task
+	 *
+	 * @return Response
+	 */
+	public function current()
+	{
+        $user = Auth::user();
+        $task = $user->getRunningTask();
+
+        if( $task )
+        {
+            return Response::json(array(
+                'error' => false,
+                'task' => $task->toArray()),
+                200
+            );
+        } else {
+            return Response::json(array(
+                'error' => true,
+                'msg' => 'Task not found'),
+                200
+            );
+        }
+
+	}
 
 	/**
 	 * Get input validator for a view
@@ -217,7 +247,7 @@ class TaskController extends \BaseController {
             case 'update':
                 $validator = Validator::make($input,
                     array(
-                        'state' => 'required|in:pause,stop',
+                        'state' => 'required|in:pause,stop,continue',
                         'name' => 'max:255',
                     )
                 ); 

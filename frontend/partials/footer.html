@@ -1,0 +1,35 @@
+  <div class="row equal">
+    <div class="col-md-6 our-team">
+      <h3 class="">Nasz Zespół</h3>
+      <ul class="team-members">
+        <div class="col-md-3" ng-repeat="member in team">
+          <!-- <li ng-repeat="member in team"> -->
+            <a ui-sref="team({ slug: member.slug })" du-smooth-scroll>
+              <img ng-src="{{ member.poster }}" alt="{{ member.firstname}}">
+              <h4>{{ member.firstname }}</h4>
+            </a>
+            <!-- </li> -->
+        </div>
+      </ul>
+      <!-- <img src="statics/images/sample/team1.jpg" /> -->
+      <!-- <img src="statics/images/sample/team1.jpg" /> -->
+      <!-- <img src="statics/images/sample/team1.jpg" /> -->
+    </div>
+    <div class="col-md-6 site-map">
+      <h3 class="">Mapa strony</h3>
+      <div class="row">
+        <div class="col-md-5">
+          <div class="row">
+            <div class="col-md-6" ng-repeat="page in pages">
+              <a ui-sref="page({ slug: page.slug })" ng-if="page.page_type == 0">{{ page.title }}</a>
+              <a href="{{ page.slug }}" ng-if="page.page_type == 1">{{ page.title }}</a>
+              <a href="#/{{ page.slug }}" ng-if="page.page_type == 2">{{ page.title }}</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-7">
+          <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p>
+        </div>
+      </div>
+    </div>
+  </div>
