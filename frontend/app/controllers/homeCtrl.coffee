@@ -60,9 +60,16 @@ app.controller 'homeCtrl', (['$log', '$window', '$scope', '$location', '$interva
         if( !$scope.running.title )
            $scope.alerts = ["You need to provide comment to complete this task"]
         else
-            UserService.stop_task($scope.running.id, $scope.running.title)
-            resetTimer()
-            $scope.running = null
+            UserService.stop_task($scope.running.id, $scope.running.title).then ((response) ->
+              $scope.tasks.push(response.data.task)
+
+              resetTimer()
+              $scope.running = null
+              return
+            ), (response) ->
+              $scope.alerts = ["There has been an error during stopping task"]
+              return
+
 
     $scope.startCounter = () ->
         console.log "Starting counter"
@@ -108,10 +115,17 @@ app.controller 'homeCtrl', (['$log', '$window', '$scope', '$location', '$interva
             $scope.pauseButton = true
             $scope.stopButton = true
 
+            timerSeconds = timerSeconds-$scope.running.paused_duration_sec
+
             startTimer()
-        else
+        else # paused
             $scope.startButton = true
             $scope.stopButton = true
+
+            date_paused = new Date(running_task.data.task.updated_at)
+            milisecondsDiff = currentDate-date_paused
+            pausedSeconds = milisecondsDiff/1000
+            timerSeconds = timerSeconds-pausedSeconds-$scope.running.paused_duration_sec
 
             redrawCounter(timerSeconds)
 ])

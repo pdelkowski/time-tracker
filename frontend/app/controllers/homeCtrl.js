@@ -3,7 +3,7 @@
   'use strict';
   app.controller('homeCtrl', [
     '$log', '$window', '$scope', '$location', '$interval', 'UserService', 'tasks', 'running_task', function($log, $window, $scope, $location, $interval, UserService, tasks, running_task) {
-      var currentDate, date, formatInteger, milisecondsDiff, pauseTimer, redrawCounter, resetTimer, startTimer, timer, timerSeconds, updateCounter;
+      var currentDate, date, date_paused, formatInteger, milisecondsDiff, pauseTimer, pausedSeconds, redrawCounter, resetTimer, startTimer, timer, timerSeconds, updateCounter;
       formatInteger = function(i) {
         var formatted, num;
         num = parseInt(i);
@@ -67,9 +67,13 @@
         if (!$scope.running.title) {
           return $scope.alerts = ["You need to provide comment to complete this task"];
         } else {
-          UserService.stop_task($scope.running.id, $scope.running.title);
-          resetTimer();
-          return $scope.running = null;
+          return UserService.stop_task($scope.running.id, $scope.running.title).then((function(response) {
+            $scope.tasks.push(response.data.task);
+            resetTimer();
+            $scope.running = null;
+          }), function(response) {
+            $scope.alerts = ["There has been an error during stopping task"];
+          });
         }
       };
       $scope.startCounter = function() {
@@ -113,10 +117,15 @@
         if ($scope.running.state === 'running') {
           $scope.pauseButton = true;
           $scope.stopButton = true;
+          timerSeconds = timerSeconds - $scope.running.paused_duration_sec;
           return startTimer();
         } else {
           $scope.startButton = true;
           $scope.stopButton = true;
+          date_paused = new Date(running_task.data.task.updated_at);
+          milisecondsDiff = currentDate - date_paused;
+          pausedSeconds = milisecondsDiff / 1000;
+          timerSeconds = timerSeconds - pausedSeconds - $scope.running.paused_duration_sec;
           return redrawCounter(timerSeconds);
         }
       }

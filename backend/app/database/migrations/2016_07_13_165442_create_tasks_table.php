@@ -18,6 +18,7 @@ class CreateTasksTable extends Migration {
             $table->integer('user_id');
             $table->string('title')->nullable();
             $table->bigInteger('duration')->nullable();
+            $table->bigInteger('paused_duration_sec')->nullable()->default(0);
             $table->enum('state', array('running', 'completed', 'paused'))->default('running');
             $table->timestamp('completed_at')->nullable();
             $table->timestamps();

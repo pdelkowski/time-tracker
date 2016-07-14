@@ -55,6 +55,7 @@ class Task extends Eloquent {
         $this->state = 'completed';
         $this->completed_at = Carbon::now();
         $this->duration = $this->_calculateDuration();
+        $this->completed_at = $this->completed_at->toDateTimeString(); # small hack to return date in proper format
         $this->save();
         return $this;
     }
@@ -90,6 +91,7 @@ class Task extends Eloquent {
         if( $this->state != 'paused' )
             throw new TaskStateException("You cannot continue task from current state");
 
+        $this->paused_duration_sec = $this->paused_duration_sec + Carbon::now()->diffInSeconds($this->updated_at);
         $this->state = 'running';
         $this->save();
         return $this;
@@ -106,7 +108,8 @@ class Task extends Eloquent {
         if( $this->completed_at == null )
             throw new \Exception("Cannot calcuate time difference because completed_at is not set");
 
-        $diff = $this->created_at->diffInMinutes($this->completed_at);
-        return $diff;
+        $diff = $this->created_at->diffInSeconds($this->completed_at);
+        $diffSec = $diff - $this->paused_duration_sec;
+        return ceil($diffSec/60);
     }
 }

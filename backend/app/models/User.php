@@ -5,6 +5,8 @@ use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableTrait;
 use Illuminate\Auth\Reminders\RemindableInterface;
 
+use Carbon\Carbon;
+
 class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	use UserTrait, RemindableTrait;
@@ -41,7 +43,9 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
      */
     public function getCompletedTasks()
     {
-        $tasks = Task::where('user_id', '=', $this->id)->where('state', '=', 'completed')->orderby('created_at', 'DESC')->get();
+        $start_of_week = Carbon::now()->startOfWeek();
+
+        $tasks = Task::where('user_id', '=', $this->id)->where('state', '=', 'completed')->where('created_at', '>=', $start_of_week)->orderby('created_at', 'DESC')->get();
         return $tasks;
     }
 

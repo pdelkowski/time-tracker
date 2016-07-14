@@ -22,6 +22,17 @@ class TaskTableSeeder extends Seeder {
         Task::create(array(
             'user_id' => $user_id,
             'title' => 'Test task 2',
+            'duration' => 20,
+            'state' => 'completed',
+            'completed_at' => Carbon::now()
+        ));
+
+        Task::create(array(
+            'user_id' => $user_id,
+            'title' => 'Test task 3',
+            'duration' => 120,
+            'state' => 'completed',
+            'completed_at' => Carbon::now()
         ));
 
         Task::create(array(
