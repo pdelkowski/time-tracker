@@ -107,7 +107,7 @@
       if (running_task.data.error === true) {
         $scope.running = null;
         $scope.startButton = true;
-        return redrawCounter(0);
+        redrawCounter(0);
       } else {
         $scope.running = running_task.data.task;
         date = new Date(running_task.data.task.created_at);
@@ -118,7 +118,7 @@
           $scope.pauseButton = true;
           $scope.stopButton = true;
           timerSeconds = timerSeconds - $scope.running.paused_duration_sec;
-          return startTimer();
+          startTimer();
         } else {
           $scope.startButton = true;
           $scope.stopButton = true;
@@ -126,9 +126,10 @@
           milisecondsDiff = currentDate - date_paused;
           pausedSeconds = milisecondsDiff / 1000;
           timerSeconds = timerSeconds - pausedSeconds - $scope.running.paused_duration_sec;
-          return redrawCounter(timerSeconds);
+          redrawCounter(timerSeconds);
         }
       }
+      return $scope.csv_download_link = UserService.get_csv_download_link();
     }
   ]);
 

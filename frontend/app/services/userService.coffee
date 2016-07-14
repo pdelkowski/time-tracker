@@ -22,5 +22,8 @@ app.service 'UserService', ['$http', '$q', '$rootScope', 'API_URL', ($http, $q, 
   @continue_task = ($task_id) ->
     return $http.put(API_URL + 'task/' + $task_id, {"state": "continue"})
 
+  @get_csv_download_link = () ->
+    return (API_URL + 'task/csv')
+
   return
 ]

@@ -128,4 +128,6 @@ app.controller 'homeCtrl', (['$log', '$window', '$scope', '$location', '$interva
             timerSeconds = timerSeconds-pausedSeconds-$scope.running.paused_duration_sec
 
             redrawCounter(timerSeconds)
+
+    $scope.csv_download_link = UserService.get_csv_download_link()
 ])

@@ -33,6 +33,9 @@
           "state": "continue"
         });
       };
+      this.get_csv_download_link = function() {
+        return API_URL + 'task/csv';
+      };
     }
   ]);
 

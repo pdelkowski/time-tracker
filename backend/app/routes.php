@@ -31,6 +31,9 @@ Route::group(array('prefix' => 'api/v1', 'before' => 'auth.basic'), function()
     Route::get('task/current', [
         'as' => 'task_current', 'uses' => 'TaskController@current'
     ]);
+    Route::get('task/csv', [
+        'as' => 'task_csv', 'uses' => 'TaskController@download_csv'
+    ]);
     Route::resource('task', 'TaskController');
 });
 

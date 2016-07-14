@@ -223,6 +223,36 @@ class TaskController extends \BaseController {
 	}
 
 	/**
+	 * Download CSV with last week tasks
+	 *
+	 * @return Response
+	 */
+	public function download_csv()
+	{
+        $user = Auth::user();
+        $tasks = $user->getCompletedTasks();
+
+        $filename = base_path() . '/app/storage/attachments/tasks_weekly.csv';
+        $handle = fopen($filename, 'w+');
+
+        fputcsv($handle, array('ID', 'Task title', 'Created at', 'Completed at', 'Duration'));
+
+        foreach($tasks as $row) {
+            fputcsv($handle, array($row->id, $row->title, $row->created_at, $row->completed_at, $row->duration."min"));
+        }
+
+        fclose($handle);
+
+        $headers = array(
+            'Content-Type' => 'text/csv',
+        );
+
+        return Response::download($filename, 'tasks_weekly.csv', $headers);
+
+
+	}
+
+	/**
 	 * Get input validator for a view
 	 *
 	 * @param  array   $input
