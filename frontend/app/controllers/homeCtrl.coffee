@@ -45,8 +45,6 @@ app.controller 'homeCtrl', (['$log', '$window', '$scope', '$location', '$interva
             $scope.pauseButton = false
             $scope.stopButton = false
             $scope.startButton = true
-            redrawCounter(0)
-            timerSeconds = 0
 
 
     $scope.pauseCounter = () ->
@@ -64,6 +62,11 @@ app.controller 'homeCtrl', (['$log', '$window', '$scope', '$location', '$interva
               $scope.tasks.push(response.data.task)
 
               resetTimer()
+              redrawCounter(0)
+              timerSeconds = 0
+              $scope.pauseButton = false
+              $scope.stopButton = false
+              $scope.startButton = true
               $scope.running = null
               return
             ), (response) ->

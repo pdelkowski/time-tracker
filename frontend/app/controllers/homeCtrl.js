@@ -51,9 +51,7 @@
           timer = void 0;
           $scope.pauseButton = false;
           $scope.stopButton = false;
-          $scope.startButton = true;
-          redrawCounter(0);
-          return timerSeconds = 0;
+          return $scope.startButton = true;
         }
       };
       $scope.pauseCounter = function() {
@@ -70,6 +68,11 @@
           return UserService.stop_task($scope.running.id, $scope.running.title).then((function(response) {
             $scope.tasks.push(response.data.task);
             resetTimer();
+            redrawCounter(0);
+            timerSeconds = 0;
+            $scope.pauseButton = false;
+            $scope.stopButton = false;
+            $scope.startButton = true;
             $scope.running = null;
           }), function(response) {
             $scope.alerts = ["There has been an error during stopping task"];
