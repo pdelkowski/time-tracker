@@ -109,15 +109,16 @@ app.controller 'homeCtrl', (['$log', '$window', '$scope', '$location', '$interva
     else
         $scope.running = running_task.data.task
 
-        date = new Date(running_task.data.task.created_at)
-        currentDate = new Date()
-        milisecondsDiff = currentDate-date
-        timerSeconds = milisecondsDiff/1000
+        currentDate = moment() # new Date()
+        date = running_task.data.task.created_at
+        diff = moment.duration(currentDate.diff(moment(date)))
+        timerSeconds = diff.asSeconds()
 
         if( $scope.running.state == 'running' )
             $scope.pauseButton = true
             $scope.stopButton = true
 
+            console.log 'aa: ' + timerSeconds
             timerSeconds = timerSeconds-$scope.running.paused_duration_sec
 
             startTimer()
@@ -125,9 +126,9 @@ app.controller 'homeCtrl', (['$log', '$window', '$scope', '$location', '$interva
             $scope.startButton = true
             $scope.stopButton = true
 
-            date_paused = new Date(running_task.data.task.updated_at)
-            milisecondsDiff = currentDate-date_paused
-            pausedSeconds = milisecondsDiff/1000
+            date_paused = moment(running_task.data.task.updated_at)
+            diff = moment.duration(currentDate.diff(moment(date_paused))) # currentDate-date_paused
+            pausedSeconds =  diff.asSeconds()
             timerSeconds = timerSeconds-pausedSeconds-$scope.running.paused_duration_sec
 
             redrawCounter(timerSeconds)

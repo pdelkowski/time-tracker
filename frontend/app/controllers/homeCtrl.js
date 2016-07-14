@@ -3,7 +3,7 @@
   'use strict';
   app.controller('homeCtrl', [
     '$log', '$window', '$scope', '$location', '$interval', 'UserService', 'tasks', 'running_task', function($log, $window, $scope, $location, $interval, UserService, tasks, running_task) {
-      var currentDate, date, date_paused, formatInteger, milisecondsDiff, pauseTimer, pausedSeconds, redrawCounter, resetTimer, startTimer, timer, timerSeconds, updateCounter;
+      var currentDate, date, date_paused, diff, formatInteger, pauseTimer, pausedSeconds, redrawCounter, resetTimer, startTimer, timer, timerSeconds, updateCounter;
       formatInteger = function(i) {
         var formatted, num;
         num = parseInt(i);
@@ -113,21 +113,22 @@
         redrawCounter(0);
       } else {
         $scope.running = running_task.data.task;
-        date = new Date(running_task.data.task.created_at);
-        currentDate = new Date();
-        milisecondsDiff = currentDate - date;
-        timerSeconds = milisecondsDiff / 1000;
+        currentDate = moment();
+        date = running_task.data.task.created_at;
+        diff = moment.duration(currentDate.diff(moment(date)));
+        timerSeconds = diff.asSeconds();
         if ($scope.running.state === 'running') {
           $scope.pauseButton = true;
           $scope.stopButton = true;
+          console.log('aa: ' + timerSeconds);
           timerSeconds = timerSeconds - $scope.running.paused_duration_sec;
           startTimer();
         } else {
           $scope.startButton = true;
           $scope.stopButton = true;
-          date_paused = new Date(running_task.data.task.updated_at);
-          milisecondsDiff = currentDate - date_paused;
-          pausedSeconds = milisecondsDiff / 1000;
+          date_paused = moment(running_task.data.task.updated_at);
+          diff = moment.duration(currentDate.diff(moment(date_paused)));
+          pausedSeconds = diff.asSeconds();
           timerSeconds = timerSeconds - pausedSeconds - $scope.running.paused_duration_sec;
           redrawCounter(timerSeconds);
         }
